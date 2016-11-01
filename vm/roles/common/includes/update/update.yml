@@ -1,0 +1,13 @@
+---
+
+- name: update package index, upgrade packages and kernel
+  apt: upgrade=full upgrade=dist update_cache=yes cache_valid_time={{apt_cache_valid_time}}
+
+- name: install update-notifier-common for automatic reboots
+  apt: name=update-notifier-common state=latest cache_valid_time={{apt_cache_valid_time}}
+
+- name: install unattended upgrades
+  apt: name=unattended-upgrades state=latest update_cache=yes cache_valid_time={{apt_cache_valid_time}}
+
+- name: configure unattended upgrades
+  copy: src=unattended_upgrades_periodic dest=/etc/apt/apt.conf.d/10periodic

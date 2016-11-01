@@ -1,0 +1,6 @@
+# hostgroups here
+[servers]
+assemblyco.de       ansible_user=root
+
+[servers:vars]
+apt_cache_valid_time=3600

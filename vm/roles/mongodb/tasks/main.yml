@@ -1,0 +1,33 @@
+---
+
+- name: ensure mongodb signing key is trusted
+  apt_key:
+    state: present
+    keyserver: "hkp://keyserver.ubuntu.com:80"
+    id: "EA312927"
+
+- name: ensure mongodb repository exists on system
+  apt_repository: repo="{{item}}" state=present update_cache=yes
+  with_items:
+    - "deb https://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse"
+
+- name: install mongodb and dependencies
+  apt: name={{item}} state=latest update_cache=yes cache_valid_time={{apt_cache_valid_time}}
+  with_items:
+    - mongodb
+    - python3-pymongo
+
+- name: template mongodb configuration file
+  template: src=mongodb.conf.j2 dest=/etc/mongodb.conf
+  notify:
+    - restart mongodb
+
+- name: ensure mongodb is running
+  service:
+    name: mongodb
+    state: running
+
+- name: ensure mongodb allowed through firewall
+  ufw: rule=allow port="{{item}}" proto=tcp
+  with_items:
+    - "{{mongodb_allowed_ports}}"

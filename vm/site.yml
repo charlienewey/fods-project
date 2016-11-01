@@ -1,0 +1,13 @@
+---
+
+# common roles for all nodes
+- hosts: all
+  become: yes
+  roles:
+    - role: common
+
+# individual roles per hostgroup
+- hosts: db
+  roles:
+    - role: mongodb
+      become: yes

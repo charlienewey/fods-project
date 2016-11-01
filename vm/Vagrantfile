@@ -1,0 +1,37 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "ubuntu/trusty64"
+  config.vm.define :mongo
+  config.vm.hostname = "mongo"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "1024"
+  end
+
+  # port forwarding
+  mongodb_main_port = 27017
+  mongodb_web_port = 28017
+  port_forwards = [
+    # mongodb port forwards
+    {guest: mongodb_main_port, host: 27017},
+    {guest: mongodb_web_port, host: 28017}
+  ]
+
+  port_forwards.each do |forward|
+    config.vm.network "forwarded_port", guest: forward[:guest], host: forward[:host]
+  end
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.extra_vars = {
+      mongodb_web_port: mongodb_web_port,
+      mongodb_main_port: mongodb_main_port
+    }
+
+    ansible.playbook = "site.yml"
+    ansible.groups = {
+      "db" => [:mongo]
+    }
+  end
+end

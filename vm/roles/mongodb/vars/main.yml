@@ -1,0 +1,8 @@
+---
+
+mongodb_bind_ip: "0.0.0.0"
+mongodb_main_port: 27017
+mongodb_web_port: 28017
+mongodb_allowed_ports:
+  - "{{mongodb_main_port}}"
+  - "{{mongodb_web_port}}"

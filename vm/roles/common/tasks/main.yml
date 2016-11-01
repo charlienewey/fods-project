@@ -1,0 +1,5 @@
+---
+
+- include: includes/update/update.yml
+- include: includes/coretools/coretools.yml
+- include: includes/firewall/firewall.yml
