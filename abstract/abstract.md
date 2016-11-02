@@ -17,4 +17,5 @@ profitable, using only data that is available before the wine is bottled?"
 We will attempt to do this by constructing a web dashboard containing
 visualisations that will allow the user to explore historical wine prices,
 historical weather summary statistics (for example, monthly rainfall over a
-given year), and try to discover interesting relationships in the data.
+given year), and more - and attempting to uncover interesting relationships
+and patterns in the data.
