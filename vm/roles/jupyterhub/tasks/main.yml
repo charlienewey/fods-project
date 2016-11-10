@@ -1,0 +1,81 @@
+---
+
+- name: ensure python3 and dependencies are up to date
+  apt: name={{item}} state=latest update_cache=yes
+  with_items:
+    - python3
+    - python3-pip
+
+- name: ensure npm and nodejs are present and up-to-date
+  apt: name={{item}} state=latest update_cache=yes
+  with_items:
+    - nodejs-legacy
+    - npm
+
+- name: install configurable-http-proxy module
+  npm:
+    name: configurable-http-proxy
+    state: present
+    production: yes
+    global: yes
+
+- name: create directory for jupyterhub
+  file:
+    state: directory
+    recurse: yes
+    path: "{{jupyterhub_path}}"
+
+- name: create juypterhub system user
+  user:
+    name: "{{jupyterhub_user}}"
+    home: "{{jupyterhub_path}}"
+    shell: "/bin/false"
+
+- name: chown jupyterhub directory
+  file:
+    state: directory
+    recurse: yes
+    path: "{{jupyterhub_parent_path}}"
+    owner: "{{jupyterhub_user}}"
+    group: "{{jupyterhub_user}}"
+
+- name: install jupyterhub with pip3
+  become: yes
+  pip:
+    name: "{{item}}"
+    state: latest
+    executable: "/usr/bin/pip3"
+  with_items:
+    - jupyterhub
+    - notebook
+
+- name: template jupyterhub config file
+  template:
+    src: "jupyterhub_config.py.j2"
+    dest: "{{jupyterhub_config_dest}}"
+  notify:
+    - restart jupyterhub
+
+- name: template init script
+  template:
+    src: "jupyterhub.j2"
+    dest: "/etc/init.d/jupyterhub"
+    mode: "0555"
+
+- name: generate (self-signed) ssl certificate
+  command: "openssl req -new -nodes -x509 -subj '/C=GB/ST=Hampshire/L=Southampton/O=IT/CN=$(ansible_fqdn)' -days 3650 -keyout {{jupyterhub_ssl_key}} -out {{jupyterhub_ssl_cert}}"
+  args:
+    chdir: "{{jupyterhub_path}}"
+    creates: "{{jupyterhub_ssl_key}}"
+  become: yes
+  become_user: "{{jupyterhub_user}}"
+
+- name: allow jupyterhub through firewall
+  ufw:
+    rule: "allow"
+    to_port: "{{jupyterhub_port}}"
+    proto: "tcp"
+    state: "reloaded"
+
+- name: enable and start jupyterhub service
+  service: name=jupyterhub enabled=yes state=started

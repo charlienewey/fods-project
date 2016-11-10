@@ -1,0 +1,17 @@
+[Unit]
+Description=Jupyterhub Service
+After=network.target
+
+[Service]
+Type=simple
+User={{jupyterhub_user}}
+WorkingDirectory={{jupyterhub_path}}/
+User={{jupyterhub_user}}
+Group={{jupyterhub_user}}
+ExecStart=/usr/local/bin/jupyterhub -f {{jupyterhub_config_dest}}
+ExecStop=
+Restart=always
+SyslogIdentifier=Jupyterhub
+
+[Install]
+WantedBy=multi-user.target

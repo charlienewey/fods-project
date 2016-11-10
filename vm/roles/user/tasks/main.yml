@@ -1,0 +1,10 @@
+---
+
+- name: create non-root users
+  user:
+    state: present
+    append: yes
+    name: "{{item.name}}"
+    password: "{{item.password}}"
+  with_items:
+    - "{{users}}"

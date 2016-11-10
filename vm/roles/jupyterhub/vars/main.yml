@@ -1,0 +1,10 @@
+jupyterhub_port: "8888"
+jupyterhub_ip: "0.0.0.0"
+
+jupyterhub_user: "jupyterhub"
+jupyterhub_parent_path: "/var/www/jupyterhub"
+jupyterhub_path: "{{jupyterhub_parent_path}}/jupyterhub"
+jupyterhub_config_dest: "/etc/jupyterhub_config.py"
+
+jupyterhub_ssl_cert: "{{jupyterhub_parent_path}}/cert.pem"
+jupyterhub_ssl_key: "{{jupyterhub_parent_path}}/key.pem"

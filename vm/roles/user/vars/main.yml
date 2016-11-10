@@ -1,0 +1,8 @@
+---
+
+# generate encrypted password like this:
+# python -c "from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt(getpass.getpass())"
+
+users:
+  - name: charlie
+    password: "$6$rounds=656000$bIA5GZ4rKeL3v2HA$OmsSJaQnGUg2meiw2p7h4OH8VKzqevUTI03yyhpcT9XqzW89UihocTpahrh/LlSeNyy39468UevMd7HOuZSgA1"

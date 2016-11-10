@@ -15,7 +15,15 @@
   apt: name={{item}} state=latest update_cache=yes cache_valid_time={{apt_cache_valid_time}}
   with_items:
     - mongodb
-    - python3-pymongo
+
+- name: install pymongo with pip3
+  become: yes
+  pip:
+    name: "{{item}}"
+    state: latest
+    executable: "/usr/bin/pip3"
+  with_items:
+    - pymongo
 
 - name: template mongodb configuration file
   template: src=mongodb.conf.j2 dest=/etc/mongodb.conf

@@ -1,7 +1,0 @@
----
-
-- name: allow incoming ssh traffic
-  ufw: rule=allow port=22 proto=tcp
-
-- name: enable and ensure policy is default deny for incoming
-  ufw: state=enabled direction=incoming policy=deny

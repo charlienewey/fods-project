@@ -11,3 +11,10 @@
   roles:
     - role: mongodb
       become: yes
+
+- hosts: jupyterhub
+  roles:
+    - role: jupyterhub
+      become: yes
+    - role: user
+      become: yes
