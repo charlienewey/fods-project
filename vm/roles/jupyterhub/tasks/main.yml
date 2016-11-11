@@ -48,6 +48,9 @@
   with_items:
     - jupyterhub
     - notebook
+    - pandas
+    - seaborn
+    - altair
 
 - name: template jupyterhub config file
   template:
