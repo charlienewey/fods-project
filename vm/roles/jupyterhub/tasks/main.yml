@@ -48,6 +48,21 @@
   with_items:
     - jupyterhub
     - notebook
+
+- name: install matplotlib, pandas, etc dependencies
+  apt: name={{item}} state=latest update_cache=yes
+  with_items:
+    - python3-numpy
+    - python3-scipy
+    - python3-matplotlib
+
+- name: install matplotlib, pandas, etc
+  become: yes
+  pip:
+    name: "{{item}}"
+    state: latest
+    executable: "/usr/bin/pip3"
+  with_items:
     - pandas
     - seaborn
     - altair
