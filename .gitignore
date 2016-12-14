@@ -1,2 +1,8 @@
 *.pyc
 bower_components/
+static/
+bin/
+include/
+lib/
+local/
+share
