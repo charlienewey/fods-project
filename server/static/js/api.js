@@ -5,6 +5,7 @@ function getReviews(wine, rvw) {
       for (var i = 0; i < data.data.length; i += 1) {
         rvw.push(data.data[i]);
       }
+      drawLogPriceReviews(reviews);
     });
   } else {
     $.get("reviews/" + wine, function (data) {
@@ -39,7 +40,6 @@ function getPrices(wine, prc) {
 
 function getMarket(mkt) {
   $.get("market", function (data) {
-    // do things with data.data
     for (var i = 0; i < data.data.length; i += 1) {
       mkt.push(data.data[i]);
     }
