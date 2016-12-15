@@ -22,6 +22,7 @@ class MainHandler(tornado.web.RequestHandler):
         print "GET / request from", self.request.remote_ip
         self.render('index.html')
 
+
 class TestHandler(tornado.web.RequestHandler):
     def get(self):
         data = []
@@ -50,6 +51,7 @@ class WeatherHandler(tornado.web.RequestHandler):
             data['data'].append(new_doc)
         self.write( data )
 
+
 class ReviewsHandler(tornado.web.RequestHandler):
     def get(self):
         print "GET /reviews request from", self.request.remote_ip
@@ -64,6 +66,7 @@ class ReviewsHandler(tornado.web.RequestHandler):
             data['data'].append(new_doc)
         self.write( data )
 
+
 class MarketHandler(tornado.web.RequestHandler):
     def get(self):
         print "GET /market request from", self.request.remote_ip
@@ -76,25 +79,41 @@ class MarketHandler(tornado.web.RequestHandler):
             data['data'].append(new_doc)
         self.write( data )
 
+
 class PricesHandler(tornado.web.RequestHandler):
+    pipeline = [
+        { '$project': {
+            'year': { '$year': '$date' },
+            'month': { '$month': '$date' },
+            'date': '$date',
+            'region': '$region',
+            'price': '$price'
+        }},
+        { '$group': { '_id': {
+            'date': '$date',
+            'region': '$region',
+            'year': '$year',
+            'month': '$month' },
+            'price': { '$avg': '$price' }
+        }},
+        { '$sort': { '_id.date': 1 }}
+    ]
+
     def get(self, name=None):
         print "GET /prices request from", self.request.remote_ip
         data = {'data':[]}
-
         if name is None:
-            iterator = collection['prices'].find()
+            iterator = collection['prices'].aggregate(self.pipeline)
         else:
             iterator = collection['prices'].find({'name': name})
 
         for doc in iterator:
             new_doc = {}
-            new_doc['name'] = doc['name']
-            new_doc['vintage'] = doc['vintage']
-            new_doc['region'] = doc['region']
-            new_doc['date'] = doc['date'].isoformat()
-            new_doc['lwin'] = doc['lwin']
+            new_doc['region'] = doc['_id']['region']
             new_doc['price'] = doc['price']
+            new_doc['date'] = doc['_id']['date'].isoformat()
             data['data'].append(new_doc)
+
         self.write( data )
 
 
