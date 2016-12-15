@@ -1,7 +1,6 @@
 *.pyc
 pip-selfcheck.json
 bower_components/
-static/
 bin/
 include/
 lib/
