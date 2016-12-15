@@ -29,6 +29,7 @@ function getPrices(wine, prc) {
       for (var i = 0; i < data.data.length; i += 1) {
         prc.push(data.data[i]);
       }
+      drawPriceByRegion(prc);
     });
   } else {
     $.get("prices/" + wine, function (data) {
