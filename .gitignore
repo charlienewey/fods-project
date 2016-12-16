@@ -7,3 +7,5 @@ lib/
 local/
 share
 .DS_Store
+server/static/*
+!server/static/js/
