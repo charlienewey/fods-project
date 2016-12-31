@@ -34,12 +34,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="https://getbootstrap.com/examples/dashboard/#">Grapevine</a>
+          <a class="navbar-brand" href="#">Grapevine</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="https://getbootstrap.com/examples/dashboard/#">Dashboard</a></li>
-            <li><a href="https://getbootstrap.com/examples/dashboard/#">Help</a></li>
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Help</a></li>
           </ul>
           <form class="navbar-form navbar-right">
             <input type="text" class="form-control" chart="Search...">
@@ -52,16 +52,17 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="https://getbootstrap.com/examples/dashboard/#">Overview <span class="sr-only">(current)</span></a></li>
-            <li><a href="https://getbootstrap.com/examples/dashboard/#">Reports</a></li>
-            <li><a href="https://getbootstrap.com/examples/dashboard/#">Analytics</a></li>
-            <li><a href="https://getbootstrap.com/examples/dashboard/#">Export</a></li>
+            <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
+            <li><a href="#">Reports</a></li>
+            <li><a href="#">Analytics</a></li>
+            <li><a href="#">Export</a></li>
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 class="page-header">Dashboard</h1>
           <div class="row charts">
             <div class="col-xs-6 chart" id="review">
+
               <svg></svg>
               <h4>Rating Trends</h4>
               <span class="text-muted">Averaged review scores (0-100) per wine vintage vs price, aggregated over region.</span>
@@ -78,28 +79,28 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
+                  <th>Name</th>
+                  <th>Region</th>
+                  <th>Average Price</th>
                 </tr>
               </thead>
               <tbody>
-                {% for wine in range(0, 10) %}
+                {% for wine in wines %}
                   {% block row_wine %}
                   <tr>
-                    <td>{{ escape(str(wine)) }}</td>
-                    <td>Lorem</td>
-                    <td>ipsum</td>
-                    <td>dolor</td>
-                    <td>sit</td>
+                    <td>{{ escape(wine['_id']['name']) }}</td>
+                    <td>{{ escape(wine['_id']['region']) }}</td>
+                    <td>£{{ escape('%.2f' % wine['price']) }}</td>
                   </tr>
                   {% end %}
                 {% end %}
               </tbody>
             </table>
           </div>
+          {% if int(page_num) > 1 %}
+          <a class="btn btn-primary" href="/{{escape(str(page_num))}}">Previous Page</a>
+          {% end %}
+          <a class="btn btn-primary pull-right" href="/{{escape(str(next_page))}}">Next Page</a>
         </div>
       </div>
     </div>

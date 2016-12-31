@@ -18,9 +18,48 @@ collection = {
 }
 
 class MainHandler(tornado.web.RequestHandler):
-    def get(self):
+    PAGE_SIZE = 8
+    def _wine_list(self, page_num=1):
+        skip = (page_num - 1) * self.PAGE_SIZE
+        limit = self.PAGE_SIZE
+        pipeline = [
+            {
+                '$group': {
+                    '_id': {
+                        'name': '$name',
+                        'region': '$region'
+                    },
+                    'price': { '$avg': '$price' }
+                }
+            },
+            {
+                '$sort': {
+                    '_id.name': 1,
+                }
+            },
+            {
+                '$skip': skip
+            },
+            {
+                '$limit': limit
+            }
+        ]
+
+        return collection['prices'].aggregate(pipeline)
+
+    def get(self, page_num=1):
         print "GET / request from", self.request.remote_ip
-        self.render('index.html')
+        try:
+            page_num = int(page_num)
+        except ValueError:
+            page_num = 1
+
+        self.render(
+            'index.html',
+            wines=self._wine_list(page_num),
+            page_num=page_num,
+            next_page=page_num+1
+        )
 
 
 class TestHandler(tornado.web.RequestHandler):
@@ -104,14 +143,31 @@ class PricesHandler(tornado.web.RequestHandler):
         data = {'data':[]}
         if name is None:
             iterator = collection['prices'].aggregate(self.pipeline)
+            for doc in iterator:
+                new_doc = {}
+                new_doc['price'] = doc['price']
+                new_doc['region'] = doc['_id']['region']
+                new_doc['date'] = doc['_id']['date'].isoformat()
+                data['data'].append(new_doc)
         else:
             iterator = collection['prices'].find({'name': name})
+            for doc in iterator:
+                new_doc = {}
+                new_doc['price'] = doc['price']
+                new_doc['region'] = doc['region']
+                new_doc['date'] = doc['date'].isoformat()
+                data['data'].append(new_doc)
 
         for doc in iterator:
+            print(doc)
             new_doc = {}
-            new_doc['region'] = doc['_id']['region']
             new_doc['price'] = doc['price']
-            new_doc['date'] = doc['_id']['date'].isoformat()
+            try:
+                new_doc['region'] = doc['region']
+                new_doc['date'] = doc['date'].isoformat()
+            except KeyError:
+                new_doc['region'] = doc['_id']['region']
+                new_doc['date'] = doc['_id']['date'].isoformat()
             data['data'].append(new_doc)
 
         self.write( data )
@@ -124,11 +180,12 @@ settings = {
 }
 
 application = tornado.web.Application([
-    (r'/',MainHandler),
-    (r'/test',TestHandler),
+    (r'/', MainHandler),
+    (r'/(?P<page_num>\d+)?', MainHandler),
+    (r'/test', TestHandler),
     (r'/market', MarketHandler),
     (r'/prices', PricesHandler),
-    (r'/prices/([^/]+)', PricesHandler),
+    (r'/prices/(?P<name>[^/]+)?', PricesHandler),
     (r'/reviews', ReviewsHandler),
     (r'/weather', WeatherHandler),
 ], **settings)
