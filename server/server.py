@@ -58,9 +58,10 @@ class MainHandler(tornado.web.RequestHandler):
 
         self.render(
             'index.html',
-            wines=self._wine_list(page_num),
+            page='overview',
             page_num=page_num,
-            page_size=self.PAGE_SIZE
+            page_size=self.PAGE_SIZE,
+            wines=self._wine_list(page_num)
         )
 
 
@@ -149,7 +150,7 @@ class PricesDataHandler(tornado.web.RequestHandler):
 
 class PricesHandler(tornado.web.RequestHandler):
     def get(self):
-        self.write("hooray")
+        self.render('prices.html', page='prices')
 
 
 class ReviewsHandler(tornado.web.RequestHandler):
