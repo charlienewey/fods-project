@@ -35,6 +35,7 @@ class MainHandler(tornado.web.RequestHandler):
             {
                 '$sort': {
                     '_id.name': 1,
+                    '_id.region': 1
                 }
             },
             {
@@ -45,10 +46,11 @@ class MainHandler(tornado.web.RequestHandler):
             }
         ]
 
-        return collection['prices'].aggregate(pipeline)
+        return list(collection['prices'].aggregate(pipeline))
 
     def get(self, page_num=1):
         print "GET / request from", self.request.remote_ip
+
         try:
             page_num = int(page_num)
         except ValueError:
@@ -58,26 +60,11 @@ class MainHandler(tornado.web.RequestHandler):
             'index.html',
             wines=self._wine_list(page_num),
             page_num=page_num,
-            next_page=page_num+1
+            page_size=self.PAGE_SIZE
         )
 
 
-class TestHandler(tornado.web.RequestHandler):
-    def get(self):
-        data = []
-        for doc in collection['prices'].find():
-            new_doc = {}
-            new_doc['name'] = doc['name']
-            new_doc['vintage'] = doc['vintage']
-            new_doc['region'] = doc['region']
-            new_doc['date'] = doc['date'].isoformat()
-            new_doc['lwin'] = doc['lwin']
-            new_doc['price'] = doc['price']
-            data.append(new_doc)
-            self.write( json.dumps(data) )
-
-
-class WeatherHandler(tornado.web.RequestHandler):
+class WeatherDataHandler(tornado.web.RequestHandler):
     def get(self):
         print "GET /weather request from", self.request.remote_ip
         data = {'data':[]}
@@ -91,7 +78,7 @@ class WeatherHandler(tornado.web.RequestHandler):
         self.write( data )
 
 
-class ReviewsHandler(tornado.web.RequestHandler):
+class ReviewsDataHandler(tornado.web.RequestHandler):
     def get(self):
         print "GET /reviews request from", self.request.remote_ip
         data = {'data':[]}
@@ -106,20 +93,7 @@ class ReviewsHandler(tornado.web.RequestHandler):
         self.write( data )
 
 
-class MarketHandler(tornado.web.RequestHandler):
-    def get(self):
-        print "GET /market request from", self.request.remote_ip
-        data = {'data':[]}
-        for doc in collection['market'].find():
-            new_doc = {}
-            dt = datetime.datetime.strptime(doc['date'], '%Y-%m-%d')
-            new_doc['date'] = dt.isoformat()
-            new_doc['price'] = doc['price']
-            data['data'].append(new_doc)
-        self.write( data )
-
-
-class PricesHandler(tornado.web.RequestHandler):
+class PricesDataHandler(tornado.web.RequestHandler):
     pipeline = [
         { '$project': {
             'year': { '$year': '$date' },
@@ -173,6 +147,21 @@ class PricesHandler(tornado.web.RequestHandler):
         self.write( data )
 
 
+class PricesHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.write("hooray")
+
+
+class ReviewsHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.write("hooray")
+
+
+class WeatherHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.write("hooray")
+
+
 settings = {
     'template_path': os.path.join(os.path.dirname(__file__), 'templates'),
     'static_path' : os.path.join(os.path.dirname(__file__), 'static'),
@@ -180,14 +169,18 @@ settings = {
 }
 
 application = tornado.web.Application([
+    # web pages
     (r'/', MainHandler),
     (r'/(?P<page_num>\d+)?', MainHandler),
-    (r'/test', TestHandler),
-    (r'/market', MarketHandler),
     (r'/prices', PricesHandler),
-    (r'/prices/(?P<name>[^/]+)?', PricesHandler),
     (r'/reviews', ReviewsHandler),
     (r'/weather', WeatherHandler),
+
+    # API (e.g. /data/<stuff>)
+    (r'/data/prices', PricesDataHandler),
+    (r'/data/prices/(?P<name>[^/]+)?', PricesDataHandler),
+    (r'/data/reviews', ReviewsDataHandler),
+    (r'/data/weather', WeatherDataHandler),
 ], **settings)
 
 application.listen(7654, '127.0.0.1')
