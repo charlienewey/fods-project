@@ -155,12 +155,12 @@ class PricesHandler(tornado.web.RequestHandler):
 
 class ReviewsHandler(tornado.web.RequestHandler):
     def get(self):
-        self.write("hooray")
+        self.render('reviews.html', page='reviews')
 
 
 class WeatherHandler(tornado.web.RequestHandler):
     def get(self):
-        self.write("hooray")
+        self.render('weather.html', page='weather')
 
 
 settings = {

@@ -3,7 +3,6 @@
 {% block title %}Grapevine - Overview{% end %}
 
 {% block content %}
-          <h1 class="page-header">Dashboard</h1>
           <div class="row charts">
             <div class="col-xs-6 chart" id="review">
 
@@ -47,4 +46,7 @@
           {% if len(wines) == page_size %}
           <a class="btn btn-primary pull-right" href="/{{escape(str(page_num + 1))}}">Next Page</a>
           {% end %}
+
+          <script src="{{ static_url( "js/overview/charts.js") }}"></script>
+          <script src="{{ static_url( "js/overview/api.js" )}}" type="text/javascript"></script>
 {% end %}
