@@ -8,5 +8,6 @@ local/
 share
 .DS_Store
 server/static/*
+!server/static/css/
 !server/static/js/
 .DS_STORE
