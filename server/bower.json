@@ -18,6 +18,7 @@
   "dependencies": {
     "d3": "v3",
     "jquery": "^3.1.1",
-    "nvd3": "^1.8.5"
+    "nvd3": "^1.8.5",
+    "bootstrap": "latest"
   }
 }
