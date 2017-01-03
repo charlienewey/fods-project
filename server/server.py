@@ -11,7 +11,7 @@ db_uri = 'mongodb://group:group@ds029635.mlab.com:29635/fods-seven'
 client = MongoClient(db_uri)
 db = client['fods-seven']
 collection = {
-    'weather': db['weather_data'],
+    'weather': db['weather_monthly'],
     'prices': db['prices'],
     'reviews': db['reviews'],
     'market': db['market']
@@ -69,12 +69,18 @@ class WeatherDataHandler(tornado.web.RequestHandler):
     def get(self):
         print "GET /weather request from", self.request.remote_ip
         data = {'data':[]}
-        for doc in collection['weather'].find().limit(10):
+        sort_order = [
+            ("year", 1),
+            ("month", 1)
+        ]
+        for doc in collection['weather'].find().sort(sort_order):
             new_doc = {}
             new_doc['temperature'] = doc['temperature']
-            new_doc['precipitation'] = doc['precipitation_mm']
-            new_doc['humidity'] = doc['relative_humidity']
-            new_doc['date'] = doc['date'].isoformat()
+            new_doc['precipitation'] = doc['precipitation']
+            new_doc['humidity'] = doc['humidity']
+            new_doc['month'] = doc['month']
+            new_doc['year'] = doc['year']
+            new_doc['region'] = doc['region']
             data['data'].append(new_doc)
         self.write( data )
 

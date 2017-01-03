@@ -134,3 +134,6 @@ function drawPriceByRegion(prices) {
     return chart;
   });
 }
+
+var reviewDataCallbacks = [ drawLogPriceReviews ];
+var priceDataCallbacks = [ drawPriceByRegion ];

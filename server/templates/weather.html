@@ -4,12 +4,13 @@
 
 {% block content %}
           <div class="row charts">
-            <div class="col-md-6 bigchart" id="weather">
+            <div class="col-md-6 bigchart" id="humidity">
               <svg></svg>
               <h4>Weather/Price Trends</h4>
-              <span class="text-muted">blah blah</span>
+              <span class="text-muted">Humidity over time, across various regions of France.</span>
             </div>
           </div>
 
+          <script src="{{ static_url( "js/weather/charts.js" )}}" type="text/javascript"></script>
           <script src="{{ static_url( "js/api.js" )}}" type="text/javascript"></script>
 {% end %}
