@@ -9,3 +9,4 @@ share
 .DS_Store
 server/static/*
 !server/static/js/
+.DS_STORE
