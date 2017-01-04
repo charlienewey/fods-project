@@ -11,7 +11,6 @@ function drawLogPriceReviews(reviews) {
       .margin({top: 0, right: 50, bottom: 50, left: 100});
 
     // format axes
-    // chart.xScale(d3.scale.log().base(Math.E));
     chart.xAxis.tickFormat(d3.format('.0f'))
       .axisLabel('Price (log-scale)')
       .tickFormat(function(d) { return Math.round(Math.exp(d)) });
@@ -102,6 +101,7 @@ function drawPriceByRegion(prices) {
       .axisLabel('Price per Bottle (£)')
       .axisLabelDistance(3)
       .tickFormat(function(d) { return '£' + d3.format('.02f')(d) });
+    chart.yScale(d3.scale.log().base(Math.E));
 
     // get data
     var data = [];
