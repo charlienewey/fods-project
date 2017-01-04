@@ -65,6 +65,69 @@ class MainHandler(tornado.web.RequestHandler):
         )
 
 
+class MSCIAndPriceHandler(tornado.web.RequestHandler):
+    def get(self):
+        pipeline = [
+            {
+                '$project': {
+                    'date': {
+                        '$dateToString': {
+                            'format': '%Y-%m-01',
+                            'date': '$date'
+                        }
+                    },
+                    'region': '$region',
+                    'price': '$price'
+                }
+            },
+            {
+                '$group': {
+                    '_id': {
+                        'region': '$region',
+                        'date': '$date'
+                    },
+                    'price': {
+                        '$avg': '$price'
+                    },
+                    'date': {
+                        '$first': '$date'
+                    },
+                    'region': {
+                        '$first': '$region'
+                    }
+                }
+            },
+            {
+                '$lookup': {
+                    'from': 'market',
+                    'localField': 'date',
+                    'foreignField': 'date',
+                    'as': 'market_data'
+                }
+            },
+            {
+                '$sort': {
+                    'date': 1
+                }
+            }
+        ]
+
+        data = {'data':[]}
+        for doc in collection['prices'].aggregate(pipeline):
+            new_doc = {}
+            new_doc['price'] = doc['price']
+            new_doc['date'] = doc['date']
+            new_doc['region'] = doc['region']
+            try:
+                new_doc['market_data'] = doc['market_data'][0]
+                del new_doc['market_data']['_id']
+            except IndexError:
+                continue
+            data['data'].append(new_doc)
+
+        self.write( data )
+
+
 class WeatherDataHandler(tornado.web.RequestHandler):
     def get(self):
         print "GET /weather request from", self.request.remote_ip
@@ -184,6 +247,7 @@ application = tornado.web.Application([
     (r'/weather', WeatherHandler),
 
     # API (e.g. /data/<stuff>)
+    (r'/data/msci-and-prices', MSCIAndPriceHandler),
     (r'/data/prices', PricesDataHandler),
     (r'/data/prices/(?P<name>[^/]+)?', PricesDataHandler),
     (r'/data/reviews', ReviewsDataHandler),
