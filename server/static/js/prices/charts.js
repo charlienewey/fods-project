@@ -1,55 +1,73 @@
 /**
  * adapted from: nvd3.org/examples/line.html
  */
-function drawHumidityByRegion(weather) {
+function drawEconomyAndPriceData(market) {
   nv.addGraph(function() {
-    var chart = nv.models.lineWithFocusChart()
-      .useInteractiveGuideline(true)
+    var chart = nv.models.linePlusBarChart()
       .showLegend(true)
-      .showYAxis(true)
-      .showXAxis(true)
       .color(d3.scale.category10().range())
       .margin({top: 0, right: 50, bottom: 50, left: 100});
 
     chart.xAxis
-      .axisLabel('Date')
       .tickFormat(function(d) {
         return d3.time.format('%Y-%m')(new Date(d));
       });
 
     chart.x2Axis
-      .axisLabel('Date')
       .tickFormat(function(d) {
         return d3.time.format('%Y-%m')(new Date(d));
       });
 
-    chart.yAxis
-      .axisLabel('Relative Humidity (%)')
+    chart.yScale(d3.scale.log().base(Math.E));
+
+    chart.y1Axis
+      .axisLabel('MSCI World Change (%)')
       .axisLabelDistance(3)
-      .tickFormat(function(d) { return d3.format('.02f')(d) });
+      .tickFormat(function(d) { return d3.format('.0f')(d) + '%' });
+
+    chart.y2Axis
+      .axisLabel('Wine Price (£)')
+      .tickFormat(function(d) { return '£' + d3.format('.0f')(d) });
+
     // get data
     var data = [];
-    var groups = ['bordeaux', 'burgundy', 'rhone'];
+    var groups = ['Bordeaux', 'Burgundy', 'Southern Rhone', 'Northern Rhone'];
     for (var i = 0; i < groups.length; i += 1) {
       data.push({
         // capitalise first letter
-        key: groups[i].charAt(0).toUpperCase() + groups[i].slice(1),
+        key: groups[i],
         values: []
       });
 
-      for (var j = 0; j < weather.length; j += 1) {
-        if (groups[i] === weather[j].region) {
-          var d = new Date(weather[j].year, weather[j].month, 1);
+      for (var j = 0; j < market.length; j += 1) {
+        if (groups[i] === market[j].region) {
+          var d = d3.time.format('%Y-%m-%d').parse(market[j].date);
           data[i].values.push({
             x: d,
-            y: weather[j].humidity
+            y: market[j].price,
           })
         }
       }
     }
 
+    data.push({
+      key: "Market Change (%)",
+      values: [],
+      bar: true
+    });
+
+    for (var j = 0; j < market.length; j += 1) {
+      var d = d3.time.format('%Y-%m-%d').parse(market[j].date);
+      data[4].values.push({
+        x: d,
+        y: market[j].market_data.change,
+      })
+    }
+
+
+
     // construct plot
-    d3.select('#humidity svg')
+    d3.select('#economy svg')
       .datum(data)
       .transition().duration(100)
       .call(chart);
@@ -61,7 +79,7 @@ function drawHumidityByRegion(weather) {
 /**
  * adapted from: nvd3.org/examples/line.html
  */
-function drawPrecipitationByRegion(weather) {
+function drawPrecipitationByRegion(market) {
   nv.addGraph(function() {
     var chart = nv.models.lineWithFocusChart()
       .useInteractiveGuideline(true)
@@ -99,12 +117,13 @@ function drawPrecipitationByRegion(weather) {
         values: []
       });
 
-      for (var j = 0; j < weather.length; j += 1) {
-        if (groups[i] === weather[j].region) {
-          var d = new Date(weather[j].year, weather[j].month, 1);
+      for (var j = 0; j < market.length; j += 1) {
+        if (groups[i] === market[j].region) {
+          var d = new Date(market[j].year, market[j].month, 1);
           data[i].values.push({
             x: d,
-            y: weather[j].precipitation,
+            y: market[j].price,
+            y2: market_data.change,
             region: grp
           })
         }
@@ -112,7 +131,7 @@ function drawPrecipitationByRegion(weather) {
     }
 
     // construct plot
-    d3.select('#precipitation svg')
+    d3.select('#economy svg')
       .datum(data)
       .transition().duration(100)
       .call(chart);
@@ -122,6 +141,6 @@ function drawPrecipitationByRegion(weather) {
 }
 
 var reviewDataCallbacks = [];
-var marketDataCallbacks = [];
+var weatherDataCallbacks = [];
 var priceDataCallbacks = [];
-var weatherDataCallbacks = [ drawHumidityByRegion, drawPrecipitationByRegion ];
+var marketDataCallbacks = [ drawEconomyAndPriceData ];

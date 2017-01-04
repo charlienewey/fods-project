@@ -137,3 +137,5 @@ function drawPriceByRegion(prices) {
 
 var reviewDataCallbacks = [ drawLogPriceReviews ];
 var priceDataCallbacks = [ drawPriceByRegion ];
+var weatherDataCallbacks = [];
+var marketDataCallbacks = [];

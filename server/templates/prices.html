@@ -3,5 +3,14 @@
 {% block title %}Grapevine - Price Data{% end %}
 
 {% block content %}
+          <div class="row charts">
+            <div class="col-md-12 bigchart" id="economy">
+              <h2>Global Economic Trends</h2>
+              <svg></svg>
+              <span class="text-muted">Averaged wine prices for different regions of France, with respect to the state of the global economy (MSCI world).</span>
+            </div>
+          </div>
 
+          <script src="{{ static_url( "js/prices/charts.js" )}}" type="text/javascript"></script>
+          <script src="{{ static_url( "js/api.js" )}}" type="text/javascript"></script>
 {% end %}
