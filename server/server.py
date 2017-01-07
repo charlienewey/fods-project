@@ -154,7 +154,7 @@ class ReviewsDataHandler(tornado.web.RequestHandler):
         data = {'data':[]}
         for doc in collection['reviews'].find():
             new_doc = {}
-            new_doc['rating'] = doc['rating']
+            new_doc['rating'] = doc['avg_rating']
             new_doc['region'] = doc['region']
             new_doc['price'] = doc['price']
             new_doc['year'] = doc['year']
