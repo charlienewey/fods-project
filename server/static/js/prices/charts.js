@@ -64,8 +64,6 @@ function drawEconomyAndPriceData(market) {
       })
     }
 
-
-
     // construct plot
     d3.select('#economy svg')
       .datum(data)
@@ -140,7 +138,4 @@ function drawPrecipitationByRegion(market) {
   });
 }
 
-var reviewDataCallbacks = [];
-var weatherDataCallbacks = [];
-var priceDataCallbacks = [];
-var marketDataCallbacks = [ drawEconomyAndPriceData ];
+getMarkets(drawEconomyAndPriceData);

@@ -18,7 +18,7 @@ collection = {
 }
 
 class MainHandler(tornado.web.RequestHandler):
-    PAGE_SIZE = 8
+    PAGE_SIZE = 10
     def _wine_list(self, page_num=1):
         skip = (page_num - 1) * self.PAGE_SIZE
         limit = self.PAGE_SIZE

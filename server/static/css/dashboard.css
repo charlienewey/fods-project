@@ -105,11 +105,11 @@ body {
 }
 
 .bigchart {
-    height: 40vh !important;
-    margin-bottom: 50px;
-    padding-right: 50px;
+  margin-bottom: 50px;
+  padding-right: 50px;
 }
 
 .bigchart svg {
-    margin-bottom: 10px;
+  height: 40vh !important;
+  margin-bottom: 10px;
 }

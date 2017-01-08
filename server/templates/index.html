@@ -3,21 +3,6 @@
 {% block title %}Grapevine - Overview{% end %}
 
 {% block content %}
-          <div class="row charts">
-            <div class="col-xs-6 chart" id="review">
-
-              <svg></svg>
-              <h4>Rating Trends</h4>
-              <span class="text-muted">Averaged review scores (0-100) per wine vintage vs price, aggregated over region.</span>
-            </div>
-            <div class="col-xs-6 chart" id="prices">
-              <svg></svg>
-              <h4>Prices</h4>
-              <span class="text-muted">Price history over time, aggregated over region.</span>
-            </div>
-          </div>
-
-          <h2 class="sub-header">Individual Wines</h2>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -48,5 +33,4 @@
           {% end %}
 
           <script src="{{ static_url( "js/overview/charts.js") }}" type="text/javascript"></script>
-          <script src="{{ static_url( "js/api.js" )}}" type="text/javascript"></script>
 {% end %}
