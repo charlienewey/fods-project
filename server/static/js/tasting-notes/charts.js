@@ -45,7 +45,7 @@ function drawTastingNotesWordCloud(words) {
       .words(top_words[reg])
       .padding(5)
       .rotate(function() { return (Math.random() * 6) * 15; })
-      .font("Impact")
+      .font("Arima Madurai")
       .fontSize(function(d) { return d.size; });
 
     function draw() {
@@ -58,7 +58,7 @@ function drawTastingNotesWordCloud(words) {
         .data(top_words[reg])
         .enter().append("text")
         .style("font-size", function(d) { return d.size + "px"; })
-        .style("font-family", "Impact")
+        .style("font-family", "Arima Madurai")
         .style("fill", function(d, i) { return fill(i); })
         .attr("text-anchor", "middle")
         .attr("transform", function(d) {

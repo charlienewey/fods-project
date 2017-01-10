@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="{{ static_url("css/no-gridlines.css") }}">
     <link rel="stylesheet" href="{{ static_url("css/dashboard.css") }}">
 
+    {% block extra_head_stuff %}{% end %}
+
     <script src="{{ static_url( "jquery/dist/jquery.min.js" ) }}"></script>
     <script src="{{ static_url( "bootstrap/dist/js/bootstrap.min.js" ) }}"></script>
     <script src="{{ static_url( "d3/d3.min.js" ) }}"></script>
