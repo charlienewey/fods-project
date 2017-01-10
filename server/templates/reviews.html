@@ -6,16 +6,16 @@
           <div class="row bigchart">
             <div class="col-md-12 chart" id="review">
               <svg></svg>
-              <h4>Rating Trends</h4>
-              <span class="text-muted">Averaged review scores (0-100) per wine vintage vs price, aggregated over region.</span>
             </div>
           </div>
 
-          <div class="row charts">
-            <div class="col-md-12 chart" id="word_cloud">
-              <svg></svg>
-              <h4>Tasting Notes Word Cloud</h4>
-              <span class="text-muted">A word cloud comprising of the most common words in each wine review.
+          <br />
+          <br />
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2" id="review">
+              <h4>Rating Trends</h4>
+              <span class="text-muted">This chart shows averaged review scores (0-100) per wine vintage vs price, aggregated over region. Interestingly, there appears to be a very clear exponential relationship between review score and price - that is, a higher review score causes the price of a bottle of wine to increase exponentially. This is such a strong relationship that a linear regression has been fitted to the wines from each region (note the x-axis is a logarithmic scale). The link between review score and price is so strong that the region a wine was grown in can be effectively determined simply with the price and review score.</span>
+            </div>
           </div>
 
           <script src="{{ static_url( "js/reviews/charts.js") }}" type="text/javascript"></script>

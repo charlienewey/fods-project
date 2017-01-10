@@ -14,7 +14,8 @@ collection = {
     'weather': db['weather_monthly'],
     'prices': db['prices'],
     'reviews': db['reviews'],
-    'market': db['market']
+    'market': db['market'],
+    'words': db['words']
 }
 
 class MainHandler(tornado.web.RequestHandler):
@@ -232,6 +233,21 @@ class WeatherHandler(tornado.web.RequestHandler):
         self.render('weather.html', page='weather')
 
 
+class TastingNotesHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('tasting_notes.html', page='tasting_notes')
+
+
+class WordCountDataHandler(tornado.web.RequestHandler):
+    def get(self):
+        print "GET /word-count request from", self.request.remote_ip
+        data = {'data':[]}
+        for doc in collection['words'].find():
+            del doc['_id']
+            data['data'].append(doc)
+        self.write( data )
+
+
 settings = {
     'template_path': os.path.join(os.path.dirname(__file__), 'templates'),
     'static_path' : os.path.join(os.path.dirname(__file__), 'static'),
@@ -244,6 +260,7 @@ application = tornado.web.Application([
     (r'/(?P<page_num>\d+)?', MainHandler),
     (r'/prices', PricesHandler),
     (r'/reviews', ReviewsHandler),
+    (r'/tasting', TastingNotesHandler),
     (r'/weather', WeatherHandler),
 
     # API (e.g. /data/<stuff>)
@@ -252,6 +269,7 @@ application = tornado.web.Application([
     (r'/data/prices/(?P<name>[^/]+)?', PricesDataHandler),
     (r'/data/reviews', ReviewsDataHandler),
     (r'/data/weather', WeatherDataHandler),
+    (r'/data/word-count', WordCountDataHandler),
 ], **settings)
 
 application.listen(7654, '127.0.0.1')

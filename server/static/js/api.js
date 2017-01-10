@@ -37,3 +37,13 @@ function getMarkets(callback) {
     callback(mkt);
   });
 }
+
+function getWordCounts(callback) {
+  var wct = [];
+  $.get("/data/word-count", function (data) {
+    for (var i = 0; i < data.data.length; i += 1) {
+      wct.push(data.data[i]);
+    }
+    callback(wct);
+  });
+}
