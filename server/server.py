@@ -19,6 +19,10 @@ collection = {
 }
 
 class MainHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('overview.html',page='overview')
+
+class PricesTableHandler(tornado.web.RequestHandler):
     PAGE_SIZE = 10
     def _wine_list(self, page_num=1):
         skip = (page_num - 1) * self.PAGE_SIZE
@@ -257,7 +261,9 @@ settings = {
 application = tornado.web.Application([
     # web pages
     (r'/', MainHandler),
-    (r'/(?P<page_num>\d+)?', MainHandler),
+    # (r'/(?P<page_num>\d+)?', MainHandler),
+    # (r'/', MainHandler),
+    # (r'/(?P<page_num>\d+)?', MainHandler),
     (r'/prices', PricesHandler),
     (r'/reviews', ReviewsHandler),
     (r'/tasting', TastingNotesHandler),
