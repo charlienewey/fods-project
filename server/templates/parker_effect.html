@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Grapevine - Price Data{% end %}
+
+{% block content %}
+          <div class="row charts">
+            <div class="col-md-12 bigchart" id="parker">
+              <h2>The Parker Effect</h2>
+              <svg></svg>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+              <h4>The Effect of Robert Parker on the Price of Wine</h4>
+              <span class="text-muted">Robert Parker is a world-renowned wine reviewer - and a particular expert on the powerful red wines produced in France. The wine community consider Robert Parker to be <em>the absolute authority</em> on good and poor vintages, and his review scores are so integral to the value of each new vintage, that the wine buyers, producers, and negociants (grape buyers) actually delay pricing their products until Robert Parker has reviewed them. In economic terms, Robert Parker is a market maker, and he can (quite literally) make or break a vineyard with a single review. This effect can actually be visualised, too; Robert Parker releases the dates upon which he reviews a vintage, which means that prices can be compared <em>before</em> and <em>after</em> the review was released. The effect of review releases can be profound; causing some vintages to increase in price by as much as 45% of their value - and indeed, also to lose up to 25% of their value. It is remarkable how much the fine wine industry relies on one man to provide consistent and fair reviews - as statistics indicate that this is unlikely to be an exact process.</span>
+            </div>
+          </div>
+
+          <script src="{{ static_url( "js/parker-effect/charts.js" )}}" type="text/javascript"></script>
+{% end %}

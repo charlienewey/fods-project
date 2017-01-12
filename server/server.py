@@ -242,6 +242,11 @@ class TastingNotesHandler(tornado.web.RequestHandler):
         self.render('tasting_notes.html', page='tasting_notes')
 
 
+class ParkerEffectHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('parker_effect.html', page='parker_effect')
+
+
 class WordCountDataHandler(tornado.web.RequestHandler):
     def get(self):
         print "GET /word-count request from", self.request.remote_ip
@@ -264,6 +269,7 @@ application = tornado.web.Application([
     # (r'/(?P<page_num>\d+)?', MainHandler),
     # (r'/', MainHandler),
     # (r'/(?P<page_num>\d+)?', MainHandler),
+    (r'/parker', ParkerEffectHandler),
     (r'/prices', PricesHandler),
     (r'/reviews', ReviewsHandler),
     (r'/tasting', TastingNotesHandler),
